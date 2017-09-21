@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd 
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.2.xsd ">
+    <!-- 自动去扫描base-package下面或者子包下面的java文件，如果扫描到有@Component、@Controller、@Service等这些注解的类，则把这些类注册为bean -->
+    <context:component-scan base-package="com.gdi">
+        <!--排除@Controller-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 支持Spring 事务注解 -->
+    <!-- <tx:annotation-driven/> -->
+    
+    <!-- 加载系统配置文件 -->
+    <!-- <util:properties id="systemConfig" location="classpath:config/payinfo.properties"/> -->
+
+    <!-- 读取配置文件-->
+    <!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:config/jdbc.properties"/>
+    </bean> -->
+    <!-- 配置数据源，从上面配置文件读取-->
+    <!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        基本属性 url、user、password
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        配置初始化大小、最小、最大
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxActive" value="20"/>
+        配置获取连接等待超时的时间
+        <property name="maxWait" value="60000"/>
+        配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+        配置一个连接在池中最小生存的时间，单位是毫秒
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="validationQuery" value="SELECT 'x'"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        打开PSCache，并且指定每个连接上PSCache的大小
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+        配置监控统计拦截的filters
+        <property name="filters" value="stat"/>
+    </bean> -->
+
+    <!-- myBatis文件 -->
+   <!--  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        自动扫描model目录, 省掉手工配置
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        
+        <property name="configLocation" value="classpath:config/mybatis-config.xml" /> 
+        
+        配置Mybatis的插件plugin
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect=mysql
+                            reasonable=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean> -->
+
+    <!-- 配置扫描Mapper接口的包路径 -->
+    <!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.gdi.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean> -->
+
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    配置事务增强处理Bean，指定事务管理器
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            可以指定事物的传播行为/隔离级别/哪些异常不需要回滚/哪些异常需要回滚
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="sav*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice> -->
+
+</beans>

@@ -1,0 +1,41 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gdi.mapper.ProjectMapper">
+	<resultMap type="com.gdi.bean.pojo.Project" id="listResultMap">
+		<id column="id" property="id"/>
+		<result property="name" column="name" />
+		<result column="category" property="category"/>
+        <result column="introduce" property="introduce"/>
+        <result column="status" property="status"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="token_total" property="tokenTotal"/>
+        <result column="official_website_url" property="officialWebsiteUrl"/>
+        <result column="white_paperlink" property="whitePaperlink"/>
+        <result column="accept_currency" property="acceptCurrency"/>
+        <result column="other_currency" property="otherCurrency"/>
+        <result column="minimum_target" property="minimumTarget"/>
+        <result column="highest_target" property="highestTarget"/>
+        <result column="investment_threshold" property="investmentThreshold"/>
+        <result column="exchange_rate" property="exchangeRate"/>
+        <result column="allocation_plan" property="allocationPlan"/>
+        <result column="progress" property="progress"/>
+        <result column="token_name" property="tokenName"/>
+        <result column="image_url" property="imageUrl"/>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.gdi.bean.pojo.Project">
+		insert into `project` (name,category,introduce,status,start_time,end_time,token_total,official_website_url,white_paperlink,accept_currency,other_currency,minimum_target,highest_target,investment_threshold,exchange_rate,allocation_plan,progress,token_name,image_url) 
+		values (#{name},#{category},#{introduce},#{status},#{startTime},#{endTime},#{tokenTotal},#{officialWebsiteUrl},#{whitePaperlink},#{acceptCurrency},#{otherCurrency},#{minimumTarget},#{highestTarget},#{investmentThreshold},#{exchangeRate},#{allocationPlan},#{progress},#{tokenName},#{imageUrl})
+	</insert>
+	
+    <select id="findById" resultMap="listResultMap">
+        select * from `project` where id =#{id}
+    </select>
+    
+    <select id="findProjectList" resultMap="listResultMap">
+       select * from `project` 
+    </select>
+
+</mapper>   -->
