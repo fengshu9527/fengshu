@@ -26,7 +26,7 @@ public interface ContractInterface {
 	
 	/********** ICO项目 **********/
 	//发布项目
-	public Future<TransactionReceipt> addIcoProject(String icoName, String jsonvalue, int preAmount, Long startTime, Long endTime);
+	public Future<TransactionReceipt> addIcoProject(String icoName, String jsonvalue, int preAmount, Long startTime, Long endTime, String userName);
 	
 	// 获取信息
 	public CompletableFuture<List<Type>> fetchIcoProject(int i);
@@ -84,4 +84,27 @@ public interface ContractInterface {
 	//根据userAddress跟index获取订单信息
 	public CompletableFuture<List<Type>> getUserInvest(String userAddress, int i);
 	
+	//根据username获取我发布的ico项目数量
+	public Future<Uint256> getMyPublishedProjectCount(String username);
+	
+	//根据username获取我发布的ico项目
+	public CompletableFuture<List<Type>> getMyPublishedProject(String username, int i);
+	
+	//根据username获取我投资的ico项目数量
+	public Future<Uint256> getMyInvestedProjectCount(String username);
+		
+	//根据username获取我投资的ico项目
+	public CompletableFuture<List<Type>> getMyInvestedProject(String username, int i);
+	
+	//评审人员（专业投资人）注册
+	public Future<TransactionReceipt> addAssessor(String personAddr, String password, String phone, String validDateInfo, String jsonvalue);
+	
+	//判断用户是否已注册
+	public Future<Bool> hasPhoneRegistered(String phone);
+		
+	//根据用户名获取密码
+	public CompletableFuture<List<Type>> assessorPassByPhone(String phone);
+	
+	//评审人员（专业投资人）修改工期
+	public Future<TransactionReceipt> modifyValidDate(String phone, String validDateInfo);
 } 
