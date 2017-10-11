@@ -19,6 +19,8 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import com.gdi.bean.pojo.Order;
+import com.gdi.bean.pojo.voteMessgae.VoteType;
+import com.gdi.bean.vo.MatchVo.MatchType;
 import com.gdi.util.Util;
 
 /**
@@ -83,6 +85,7 @@ public class ContractImpl extends Contract implements ContractInterface {
 				Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
 				}, new TypeReference<Uint256>() {
 				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
 				}));
 		return executeCallMultipleValueReturnAsync(function);
 	}
@@ -101,13 +104,14 @@ public class ContractImpl extends Contract implements ContractInterface {
 				Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
 				}, new TypeReference<Uint256>() {
 				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
 				}));
 		return executeCallMultipleValueReturnAsync(function);
 	}
 	
 	@Override
 	public CompletableFuture<List<Type>> searchByStatus(int i, int status) {
-		Function function = new Function("searchByStatus", Arrays.asList(new Uint256(i),new Uint256(status)),
+		Function function = new Function("searchByStatus", Arrays.asList(new Uint256(BigInteger.valueOf(i)),new Uint256(status)),
 				Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {
 				}, new TypeReference<Utf8String>() {
 				}, new TypeReference<Uint256>() {
@@ -230,6 +234,7 @@ public class ContractImpl extends Contract implements ContractInterface {
 				Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
 				}, new TypeReference<Uint256>() {
 				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
 				}));
 		return executeCallMultipleValueReturnAsync(function);
 	}
@@ -248,13 +253,14 @@ public class ContractImpl extends Contract implements ContractInterface {
 				Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
 				}, new TypeReference<Uint256>() {
 				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
 				}));
 		return executeCallMultipleValueReturnAsync(function);
 	}
 
 	@Override
-	public Future<TransactionReceipt> addAssessor(String personAddr, String password, String phone, String validDateInfo, String jsonvalue) {
-		Function function = new Function("addAssessor", Arrays.<Type>asList(new Address(personAddr),Util.stringToByte32(password), Util.stringToByte32(phone), new Utf8String(validDateInfo), new Utf8String(jsonvalue)), Collections.<TypeReference<?>>emptyList());
+	public Future<TransactionReceipt> addAssessor(String personAddr, String password, String phone, String name, String jsonvalue) {
+		Function function = new Function("addAssessor", Arrays.<Type>asList(new Address(personAddr),Util.stringToByte32(password), Util.stringToByte32(phone), Util.stringToByte32(name), new Utf8String(jsonvalue)), Collections.<TypeReference<?>>emptyList());
 		return executeTransactionAsync(function);
 	}
 
@@ -280,5 +286,85 @@ public class ContractImpl extends Contract implements ContractInterface {
 	public Future<TransactionReceipt> modifyValidDate(String phone, String validDateInfo) {
 		Function function = new Function("modifyValidDate", Arrays.<Type>asList(Util.stringToByte32(phone), new Utf8String(validDateInfo)), Collections.<TypeReference<?>>emptyList());
 		return executeTransactionAsync(function);
+	}
+
+	@Override
+	public Future<Uint256> getAllAssessorCount() {
+		Function function = new Function("getAllAssessorCount", Arrays.asList(),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+				}));
+		return executeCallSingleValueReturnAsync(function);
+	}
+
+	@Override
+	public CompletableFuture<List<Type>> getAssessorInfoByIndex(int index) {
+		Function function = new Function("phoneForAssessorAtIndex", Arrays.asList(new Uint256(BigInteger.valueOf(index))),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {
+				}, new TypeReference<Bytes32>() {
+				}, new TypeReference<Utf8String>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
+				}));
+		return executeCallMultipleValueReturnAsync(function);
+	}
+
+	@Override
+	public Future<TransactionReceipt> pushAssessorProjects(String phone, int status, String icoName) {
+		Function function = null;
+		if(MatchType.Trial == status) {//初审
+			 function = new Function("pushSimpleTrialAssessorProjectInfo", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName)), Collections.<TypeReference<?>>emptyList());
+		}else if(MatchType.ReTrial == status){//复审
+			 function = new Function("pushSimpleRetrialAssessorProjectInfo", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName)), Collections.<TypeReference<?>>emptyList());
+		}else {//监管
+			 function = new Function("pushSimpleMonitorAssessorProjectInfo", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName)), Collections.<TypeReference<?>>emptyList());
+		}
+		return executeTransactionAsync(function);
+	}
+
+	@Override
+	public Future<Uint256> getAssessorTrialListCount(String phone, int trialType) {
+		Function function = new Function("getAssessorTrialListCount", Arrays.asList(Util.stringToByte32(phone),new Uint256(trialType)),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+				}));
+		return executeCallSingleValueReturnAsync(function);
+	}
+
+	@Override
+	public CompletableFuture<List<Type>> getAssessorTrialProject(String phone, int index, int trialType) {
+		Function function = new Function("getAssessorTrialProject", Arrays.asList(Util.stringToByte32(phone), new Uint256(BigInteger.valueOf(index)),new Uint256(trialType)),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Utf8String>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Uint256>() {
+				}));
+		return executeCallMultipleValueReturnAsync(function);
+	}
+
+	@Override
+	public Future<TransactionReceipt> pushSimpleTrialAssessorProjectInfo(String phone, String icoName) {
+		Function function = new Function("pushSimpleTrialAssessorProjectInfo", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName)), Collections.<TypeReference<?>>emptyList());
+		return executeTransactionAsync(function);
+	}
+
+	@Override
+	public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment ,int voteType) {
+		Function function = null;
+		if(VoteType.Trial == voteType) {
+			function = new Function("addTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}else if(VoteType.ReTrial == voteType) {
+			function = new Function("addReTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}else {
+			function = new Function("addMonitorVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}
+		return executeTransactionAsync(function);
+	}
+
+	@Override
+	public Future<Uint256> getTrailVoteMessageCount(String icoName, int status) {
+		Function function = new Function("getTrailVoteMessageCount", Arrays.asList(Util.stringToByte32(icoName),new Uint256(status)),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+				}));
+		return executeCallSingleValueReturnAsync(function);
 	}
 }
