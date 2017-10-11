@@ -29,7 +29,7 @@ public interface ContractInterface {
 	public Future<TransactionReceipt> addIcoProject(String icoName, String jsonvalue, int preAmount, Long startTime, Long endTime, String userName);
 	
 	// 获取信息
-	public CompletableFuture<List<Type>> fetchIcoProject(int i);
+	public CompletableFuture<List<Type>> fetchIcoProject(int index);
 	
 	// 获取数量
 	public Future<Uint256> icoProjectsCount();
@@ -41,7 +41,7 @@ public interface ContractInterface {
 	public CompletableFuture<List<Type>> searchByIcoName(String icoName);
 	
 	//根据项目状态搜索项目
-	public CompletableFuture<List<Type>> searchByStatus(int i, int status);
+	public CompletableFuture<List<Type>> searchByStatus(int index, int status);
 	
 	/********** 关注 **********/
 	//关注ico项目
@@ -60,7 +60,7 @@ public interface ContractInterface {
 	public Future<Uint256> allAttentionNumber(String userName);
 	
 	// 根据index索引关注ICO信息（我的关注列表）
-	public CompletableFuture<List<Type>> myAttentionIcoInfo(String userName, int i);
+	public CompletableFuture<List<Type>> myAttentionIcoInfo(String userName, int index);
 	
 	/********** 投资 **********/
 	//投资项目
@@ -70,7 +70,7 @@ public interface ContractInterface {
 	public Future<TransactionReceipt> icoPrjFeedBackAmount(String icoName);
 	
 	//根据icoName跟index获取投资信息
-	public CompletableFuture<List<Type>> fetchInvetstor(String icoName, int i);
+	public CompletableFuture<List<Type>> fetchInvetstor(String icoName, int index);
 	
 	//根据icoName获取投资人数量
 	public Future<Uint256> fetchInvestorCount(String icoName);
@@ -82,19 +82,21 @@ public interface ContractInterface {
 	public Future<Uint256> userInvestCount(String userAddress);
 	
 	//根据userAddress跟index获取订单信息
-	public CompletableFuture<List<Type>> getUserInvest(String userAddress, int i);
+	public CompletableFuture<List<Type>> getUserInvest(String userAddress, int index);
 	
 	//根据username获取我发布的ico项目数量
 	public Future<Uint256> getMyPublishedProjectCount(String username);
 	
 	//根据username获取我发布的ico项目
-	public CompletableFuture<List<Type>> getMyPublishedProject(String username, int i);
+	public CompletableFuture<List<Type>> getMyPublishedProject(String username, int index);
 	
 	//根据username获取我投资的ico项目数量
 	public Future<Uint256> getMyInvestedProjectCount(String username);
 		
 	//根据username获取我投资的ico项目
-	public CompletableFuture<List<Type>> getMyInvestedProject(String username, int i);
+	public CompletableFuture<List<Type>> getMyInvestedProject(String username, int index);
+	
+	/********** 评审用户 **********/
 	
 	//评审人员（专业投资人）注册
 	public Future<TransactionReceipt> addAssessor(String personAddr, String password, String phone, String validDateInfo, String jsonvalue);
@@ -107,4 +109,30 @@ public interface ContractInterface {
 	
 	//评审人员（专业投资人）修改工期
 	public Future<TransactionReceipt> modifyValidDate(String phone, String validDateInfo);
+	
+	//获取专业投资人的数量
+	public Future<Uint256> getAllAssessorCount();
+	
+	//根据index获取专业投资人的信息
+    public CompletableFuture<List<Type>> getAssessorInfoByIndex(int index);
+    
+    //将用户放入项目的审核列表中
+    public Future<TransactionReceipt> pushAssessorProjects(String phone, int status, String icoName);
+    
+    //根据审核类型和手机号 获取当前专业投资人的审核信息数量
+  	public Future<Uint256> getAssessorTrialListCount(String phone, int trialType);
+  	
+    //根据审核类型和手机号以及下标 获取当前专业投资人的审核信息
+    public CompletableFuture<List<Type>> getAssessorTrialProject(String phone, int index, int trialType);
+    
+    //只绑定初审状态的Assessor与项目
+    public Future<TransactionReceipt> pushSimpleTrialAssessorProjectInfo(String phone, String icoName);
+    
+    //审核人员添加投票和评论
+    public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment, int voteType);
+    
+    //获取项目评论各个状态下评论条数
+    public Future<Uint256> getTrailVoteMessageCount(String icoName, int status);
+    
+    
 } 
