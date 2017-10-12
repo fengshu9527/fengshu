@@ -129,10 +129,12 @@ public interface ContractInterface {
     public Future<TransactionReceipt> pushSimpleTrialAssessorProjectInfo(String phone, String icoName);
     
     //审核人员添加投票和评论
-    public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment, int voteType);
+    public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment, int voteType, String username, Long createTime);
     
-    //获取项目评论各个状态下评论条数
-    public Future<Uint256> getTrailVoteMessageCount(String icoName, int status);
+    //获取项目投票各个状态下投票条数
+    public Future<Uint256> getVoteMessageCount(String icoName,int voteType);
     
+    //根据投票类型获取项目的评论内容
+    public CompletableFuture<List<Type>> getVoteMessage(String icoName, int index, int voteType);
     
 } 
