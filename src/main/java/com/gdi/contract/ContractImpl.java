@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Array;
 import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -19,7 +20,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import com.gdi.bean.pojo.Order;
-import com.gdi.bean.pojo.voteMessgae.VoteType;
+import com.gdi.bean.pojo.VoteMessgae.VoteType;
 import com.gdi.bean.vo.MatchVo.MatchType;
 import com.gdi.util.Util;
 
@@ -348,23 +349,35 @@ public class ContractImpl extends Contract implements ContractInterface {
 	}
 
 	@Override
-	public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment ,int voteType) {
+	public Future<TransactionReceipt> addVoteMessgae(String phone, String icoName, int scam, String comment ,int voteType, String username, Long createTime) {
 		Function function = null;
 		if(VoteType.Trial == voteType) {
-			function = new Function("addTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+			function = new Function("addTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment), new Uint256(createTime), Util.stringToByte32(username)), Collections.<TypeReference<?>>emptyList());
 		}else if(VoteType.ReTrial == voteType) {
-			function = new Function("addReTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+			function = new Function("addReTrailVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment), new Uint256(createTime), Util.stringToByte32(username)), Collections.<TypeReference<?>>emptyList());
 		}else {
-			function = new Function("addMonitorVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+			function = new Function("addMonitorVoteMessgae", Arrays.<Type>asList(Util.stringToByte32(phone), Util.stringToByte32(icoName), new Uint256(scam), new Utf8String(comment), new Uint256(createTime), Util.stringToByte32(username)), Collections.<TypeReference<?>>emptyList());
 		}
 		return executeTransactionAsync(function);
 	}
 
 	@Override
-	public Future<Uint256> getTrailVoteMessageCount(String icoName, int status) {
-		Function function = new Function("getTrailVoteMessageCount", Arrays.asList(Util.stringToByte32(icoName),new Uint256(status)),
+	public Future<Uint256> getVoteMessageCount(String icoName, int voteType) {
+		Function function = new Function("getVoteMessageCount", Arrays.asList(Util.stringToByte32(icoName), new Uint256(voteType)),
 				Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
 				}));
 		return executeCallSingleValueReturnAsync(function);
+	}
+
+	@Override
+	public CompletableFuture<List<Type>> getVoteMessage(String icoName, int index, int voteType) {
+		Function function = new Function("getVoteMessage", Arrays.asList(Util.stringToByte32(icoName), new Uint256(BigInteger.valueOf(index)), new Uint256(voteType)),
+				Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Utf8String>() {
+				}, new TypeReference<Uint256>() {
+				}, new TypeReference<Bytes32>() {
+				}));
+		return executeCallMultipleValueReturnAsync(function);
 	}
 }
