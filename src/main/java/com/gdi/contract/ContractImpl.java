@@ -371,7 +371,16 @@ public class ContractImpl extends Contract implements ContractInterface {
 
 	@Override
 	public CompletableFuture<List<Type>> getVoteMessage(String icoName, int index, int voteType) {
-		Function function = new Function("getVoteMessage", Arrays.asList(Util.stringToByte32(icoName), new Uint256(BigInteger.valueOf(index)), new Uint256(voteType)),
+		/*String MethodName = "";
+		if(VoteType.Trial == voteType) {
+			MethodName = "getTrailVoteMessage";
+		}else if(VoteType.ReTrial == voteType){
+			MethodName = "getReTrailVoteMessage";
+		}else {
+			MethodName = "getMotorVoteMessage";
+		}*/
+		String MethodName = "getTrailVoteMessage";
+		Function function = new Function(MethodName, Arrays.asList(Util.stringToByte32(icoName), new Uint256(BigInteger.valueOf(index)),new Uint256(voteType)),
 				Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {
 				}, new TypeReference<Uint256>() {
 				}, new TypeReference<Utf8String>() {
@@ -379,5 +388,18 @@ public class ContractImpl extends Contract implements ContractInterface {
 				}, new TypeReference<Bytes32>() {
 				}));
 		return executeCallMultipleValueReturnAsync(function);
+	}
+
+	@Override
+	public Future<TransactionReceipt> modifyVoteMessage(String icoName, String phone, String comment, int voteType) {
+		Function function = null;
+		if(VoteType.Trial == voteType) {
+			function = new Function("modifyAssessoryTrialComment", Arrays.<Type>asList(Util.stringToByte32(icoName), Util.stringToByte32(phone), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}else if(VoteType.ReTrial == voteType) {
+			function = new Function("modifyAssessoryReTrialComment", Arrays.<Type>asList(Util.stringToByte32(icoName), Util.stringToByte32(phone), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}else {
+			function = new Function("modifyAssessoryMonitorComment", Arrays.<Type>asList(Util.stringToByte32(icoName), Util.stringToByte32(phone), new Utf8String(comment)), Collections.<TypeReference<?>>emptyList());
+		}
+		return executeTransactionAsync(function);
 	}
 }
