@@ -137,4 +137,6 @@ public interface ContractInterface {
     //根据投票类型获取项目的评论内容
     public CompletableFuture<List<Type>> getVoteMessage(String icoName, int index, int voteType);
     
+    //修改投票信息
+    public Future<TransactionReceipt> modifyVoteMessage(String icoName, String phone, String comment, int voteType);
 } 
